@@ -25,6 +25,19 @@ def conexion():
 	except:
 		messagebox.showinfo("CONEXION", "error al crear base de datos")
 
+def salirAplicacion():
+	valor=messagebox.askquestion("Salir","Desea salir?")
+	if valor=="yes":
+		raiz.destroy()
+
+def mensaje():
+	Acerca='''
+	aplicacion de Base de Datos
+	Version 1 
+	Autor: E.W.V.
+	'''
+	messagebox.showingo(title="INFORMACION", mensaje=Acerca)
+
 def limpiarCampos():
 	miId.set("")
 	miNombre.set("")
@@ -44,7 +57,7 @@ def mostrar():
 	except:
 		pass
 
-def elimanar():
+def eliminar():
 	miConexion=sqlite3.connect("base")
 	miCursor=miConexion.cursor()
 	if miCursor.askyesno(message="Datos seran eliminados permanentemente",title="Advertencia"):
@@ -66,9 +79,9 @@ def crear():
 	mostrar()
 
 # dibujar tabla 
-tree.tkk.Treeview(height=10, colmns=('#0','#1','#2'))
+tree=ttk.Treeview(height=10, columns=('#0','#1','#2'))
 tree.place(x=0,y=130)
-tree.column('#0', width=180)
+tree.column('#0', width=55)
 tree.heading('#0', text='ID', anchor=CENTER)
 tree.heading('#1', text='Nombres', anchor=CENTER)
 tree.heading('#2', text='Cargo', anchor=CENTER)
@@ -76,10 +89,10 @@ tree.column('#3', width=180)
 tree.heading('#3', text='Salario', anchor=CENTER)
 
 def seleccionar(event):
-	item=tree.identify('item', event.x event.y)
+	item=tree.identify('item', event.x,event.y)
 	miId.set(tree.item(item,'text'))
 	miNombre.set(tree.item(item,'Values')[0])
 	miCargo.set(tree.item(item,'Values')[1])
 	miSalario.set(tree.item(item,'Values')[2])
 
-tree.bind("<Dou")
+tree.bind("<Double-1>",seleccionar)
