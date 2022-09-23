@@ -13,7 +13,7 @@ miSalario = StringVar
 
 def conexion():
     miConexion=sqlite3.connect("base")
-    miCursor.miConexion.cursor()
+    miCursor=miConexion.cursor()
     try:
         miCursor.execute("""
         CREATE TABLE empleado(
@@ -60,7 +60,7 @@ def eliminar():
     miConexion=sqlite3.connect("base")
     miCursor=miConexion.cursor()
     if messagebox.askyesno(message="los datos seran eliminados permanetemente",title="Advertencia"):
-     miCursor.execute("DROP TABLE empleado")
+        miCursor.execute("DROP TABLE empleado")
     else:
         pass
 
@@ -97,7 +97,7 @@ tree.bind("<Double -1>", seleccionar)
 
 def actualiza():
     miConexion=sqlite3.connect("base")
-    miCursor=miConexion.cursor()
+    miCursor=                                                                                                                                                                                                                                                         miConexion.cursor()
     try:
         datos=miNombre.get(),miCargo.get(),miSalario.get()
         miCursor.execute("UPDATE empleado SET NOMBRE=?, CARGO=?,SALARIO=? WHERE ID="+miId.get(),(datos))
@@ -120,3 +120,66 @@ def borrar():
         pass
     limpiarCampos()
     mostrar()
+
+def borrar():
+    miConexion=sqlite3.connect("base")
+    miCursor=miConexion.cursor()
+    try:
+        if miConexion.askyesno(message="Desea eliminar registro?",title="advertencia"):
+            miCursor.commit()
+    except:
+        messagebox.showwarnig("Advertencia","Error al borrar")
+        pass
+    limpiarCampos()
+    mostrar()
+
+#===== Llenar ventanas=========
+menubar=Menu(raiz)
+#raiz.config(menu=menubar)
+menubasedat=Menu(menubar,tearoff=0)
+menubasedat.add_command(label="crear/conector BD", command=conexion)
+menubasedat.add_command(label="Eliminar BD", command=eliminar)
+menubasedat.add_command(label="salir", command=salirAplicacion)
+menubar.add_cascade(label="Inicio", menu=menubasedat)
+ayudamenu=Menu(menubar,tearoff=0)
+ayudamenu.add_command(label="Resetear campos", command=limpiarCampos)
+ayudamenu.add_command(label="Acerca..", command=mensaje)
+menubar.add_cascade(label="ayuda", menu=ayudamenu)
+
+#crear botones 
+L1=Entry(raiz,text="text")
+L1.place(x=20, y=10)
+e1=Entry(raiz,textvariable=miId)
+e1.place(x=50, y=10)
+
+L2 = Label(raiz, text="Nombre")
+L2.place(x=100, y=10)
+e2=Entry(raiz, textvariable=miNombre, width=50)
+e2.place(x=180, y=10)
+
+L3 = Label(raiz, text="Cargo:")
+L3.place(x=50, y=40)
+e3=Entry(raiz, textvariable=miCargo, width=30)
+e3.place(x=100, y=40)
+
+L4 = Label(raiz, text="Salario:")
+L4.place(x=250, y=40)
+e4=Entry(raiz, textvariable=miSalario, width=15)
+e4.place(x=320, y=40)
+
+#==CREAR BOTONES=====
+b1 = Button(raiz,text="Crear registro",command=crear)
+b1.place(x=50, y=90)
+
+b2 = Button(raiz,text="Modificar registro",command=actualiza)
+b2.place(x=180, y=90)
+
+b3 = Button(raiz,text="mostrar registro",command=mostrar)
+b3.place(x=320, y=90)
+
+b4 = Button(raiz,text="eliminar registro",bg="red",command=borrar)
+b4.place(x=450, y=90)
+
+raiz.config(menu=menubar)
+raiz.mainloop()
+
